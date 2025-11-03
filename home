@@ -1,0 +1,212 @@
+// VideoHut-Replica
+// Этот файл — рабочая превью-страница в Canvas (React).
+// Раньше документ содержал множество файлов и raw-скриптов подряд, что приводило
+// к синтаксической ошибке "Unexpected token" при попытке превью: Canvas ожидает
+// единый экспортируемый React-компонент в файле типа code/react.
+//
+// Ниже — аккуратная, исправленная одностраничная версия (Preview) с минимальными
+// компонентами: Hero, Partners, Projects, Services, Industries, ContactForm.
+// Она рендерится как единый React-компонент и служит одновременно живым превью
+// того, как будет выглядеть полноценный проект. Полная структура проекта и
+// scaffold по-прежнему описаны в комментариях README внутри этого файла.
+
+/*
+README.md (сокращённая версия)
+
+VideoHut-Replica — Full production-ready React + Tailwind replica of your Framer template.
+
+Содержимое проекта (на уровне репозитория):
+- package.json, vite.config.js, tailwind.config.cjs, postcss.config.cjs
+- public/index.html, public/assets/... (ваши ассеты: logo.svg, hero-video.mp4, project-*.jpg, partner-*.svg)
+- src/main.jsx, src/index.css, src/App.jsx, src/components/*
+
+Как использовать этот Canvas-превью:
+- Это единый React-компонент, который можно просмотреть здесь.
+- Для полноценного локального запуска используйте scaffold из исходного README,
+  который был предоставлен ранее (Vite + React + Tailwind).
+
+Что делать дальше (нужны ваши ассеты):
+1. Загрузите ZIP с ассетами в этот чат или дайте ссылку на Google Drive.
+2. Укажите endpoint для формы (Formspree) или email.
+3. Скажите, хотите ли, чтобы я создал GitHub-репо и задеплоил на Vercel — могу сделать это за вас.
+*/
+
+import React, { useState } from 'react'
+
+// Небольшие вспомогательные компоненты — определены внутри одного файла
+function Hero({ logo }){
+  return (
+    <section className="py-12" style={{fontFamily:'Inter, system-ui, -apple-system'}}>
+      <div style={{maxWidth:1100, margin:'0 auto', padding:'0 20px', display:'flex', gap:40, alignItems:'center', flexWrap:'wrap'}}>
+        <div style={{flex:'1 1 420px'}}>
+          <img src={logo} alt="Logo" style={{height:44, marginBottom:18}}/>
+          <h1 style={{fontSize:32, margin:0}}>Turning Video into Vibrant Conversations</h1>
+          <p style={{color:'#6b7280', marginTop:12}}>Full-service production: Pre, Production, Post. We craft stories that move audiences.</p>
+          <div style={{marginTop:16, display:'flex', gap:12}}>
+            <a href="#projects" style={{padding:'10px 16px', background:'#0f172a', color:'#fff', borderRadius:8, textDecoration:'none'}}>See Projects</a>
+            <a href="#contact" style={{padding:'10px 16px', border:'1px solid #e6edf3', borderRadius:8, textDecoration:'none', color:'#0f172a'}}>Contact Us</a>
+          </div>
+        </div>
+        <div style={{flex:'1 1 420px'}}>
+          <div style={{background:'#000', borderRadius:12, overflow:'hidden', minHeight:200, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff'}}>
+            <div style={{textAlign:'center', padding:20}}>
+              <div style={{fontWeight:700}}>Video / Showreel</div>
+              <div style={{fontSize:12, marginTop:8, opacity:0.8}}>Replace with your hero-video.mp4 or hero-poster.jpg in production</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Partners(){
+  const partners = Array.from({length:6}).map((_,i)=>`/assets/partner-${i+1}.svg`)
+  return (
+    <section style={{padding:'20px 0', borderTop:'1px solid #f1f5f9'}}>
+      <div style={{maxWidth:1100, margin:'0 auto', padding:'0 20px', display:'flex', gap:16, overflowX:'auto'}}>
+        {partners.map((src,idx)=> (
+          <div key={idx} style={{minWidth:120, minHeight:48, display:'flex', alignItems:'center', justifyContent:'center', background:'#fff', borderRadius:8, boxShadow:'0 1px 2px rgba(0,0,0,0.04)'}}>
+            <img src={src} alt={`partner-${idx+1}`} style={{maxHeight:28, opacity:0.85}} onError={(e)=>{e.currentTarget.style.opacity='0.25'; e.currentTarget.alt='placeholder'}}/>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function Projects(){
+  const projects = Array.from({length:6}).map((_,i)=>({id:i+1,title:`Project ${i+1}`,thumb:`/assets/project-${i+1}.jpg`}))
+  return (
+    <section id="projects" style={{padding:32}}>
+      <div style={{maxWidth:1100, margin:'0 auto', padding:'0 20px'}}>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+          <h2 style={{margin:0}}>Selected Projects</h2>
+          <a href="#" style={{fontSize:13}}>See All Projects →</a>
+        </div>
+        <div style={{marginTop:20, display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))', gap:16}}>
+          {projects.map(p=> (
+            <article key={p.id} style={{borderRadius:12, overflow:'hidden', boxShadow:'0 6px 18px rgba(15,23,42,0.06)', background:'#fff'}}>
+              <div style={{height:160, background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                <img src={p.thumb} alt={p.title} style={{maxWidth:'100%', maxHeight:'100%'}} onError={(e)=>{e.currentTarget.style.display='none'}}/>
+                <div style={{padding:8}}>{/* placeholder */}</div>
+              </div>
+              <div style={{padding:12}}>
+                <h3 style={{margin:'0 0 6px 0'}}>{p.title}</h3>
+                <p style={{margin:0, color:'#6b7280', fontSize:13}}>Short description of the project and the role we played.</p>
+                <div style={{marginTop:10}}><a href="#" style={{fontSize:13}}>View project →</a></div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Services(){
+  const services = [
+    {id:1,title:'Pre-Production',desc:'Script, storyboarding, casting, location scouting.'},
+    {id:2,title:'Production',desc:'Full crew, direction, cinematography and equipment.'},
+    {id:3,title:'Post-Production',desc:'Editing, color grading, sound design and deliverables.'}
+  ]
+  return (
+    <section id="services" style={{padding:32, background:'#fbfdff'}}>
+      <div style={{maxWidth:1100, margin:'0 auto', padding:'0 20px', display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))', gap:16}}>
+        {services.map(s=> (
+          <div key={s.id} style={{padding:16, borderRadius:12, background:'#fff', boxShadow:'0 4px 12px rgba(2,6,23,0.04)'}}>
+            <h4 style={{margin:0}}>{s.title}</h4>
+            <p style={{color:'#6b7280', marginTop:8}}>{s.desc}</p>
+            <div style={{marginTop:12}}><a href="#" style={{fontSize:13}}>Learn more →</a></div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function Industries(){
+  const items = ['Corporate','Documentary','Commercials','Shorts & Reels','Music Videos']
+  return (
+    <section style={{padding:32}}>
+      <div style={{maxWidth:1100, margin:'0 auto', padding:'0 20px'}}>
+        <h3>Industries</h3>
+        <div style={{marginTop:12, display:'flex', gap:10, flexWrap:'wrap'}}>
+          {items.map(it=> (
+            <span key={it} style={{padding:'8px 12px', borderRadius:999, border:'1px solid #e6edf3'}}>{it}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ContactForm(){
+  const [status, setStatus] = useState(null)
+  async function submit(e){
+    e.preventDefault()
+    // NOTE: In Canvas preview we will not actually send the request.
+    // This simulates a successful send and shows the UI state change.
+    setStatus('SENT')
+    setTimeout(()=>setStatus(null), 3000)
+  }
+  return (
+    <form onSubmit={submit} style={{background:'#fff', padding:16, borderRadius:12, boxShadow:'0 6px 20px rgba(2,6,23,0.06)', maxWidth:520}}>
+      <label style={{display:'block'}}>Name
+        <input name="name" required style={{display:'block', marginTop:8, width:'100%', padding:10, borderRadius:8, border:'1px solid #e6edf3'}}/>
+      </label>
+      <label style={{display:'block', marginTop:12}}>Email
+        <input name="email" type="email" required style={{display:'block', marginTop:8, width:'100%', padding:10, borderRadius:8, border:'1px solid #e6edf3'}}/>
+      </label>
+      <label style={{display:'block', marginTop:12}}>Message
+        <textarea name="message" rows={4} style={{display:'block', marginTop:8, width:'100%', padding:10, borderRadius:8, border:'1px solid #e6edf3'}}/>
+      </label>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:12}}>
+        <button type="submit" style={{padding:'10px 14px', background:'#0f172a', color:'#fff', borderRadius:8}}>Send</button>
+        {status && <span style={{color:'#6b7280'}}>{status === 'SENT' ? 'Message sent — thank you!' : 'Error, try later'}</span>}
+      </div>
+    </form>
+  )
+}
+
+// Основной экспорт — единый React-компонент, который Canvas может безопасно отрендерить
+export default function VideoHutPreview(){
+  const [logo, setLogo] = useState('/assets/logo.svg')
+
+  return (
+    <div style={{background:'#fff', color:'#0f172a', minHeight:'100vh'}}>
+      <header style={{padding:'18px 0', borderBottom:'1px solid #f1f5f9'}}>
+        <div style={{maxWidth:1100, margin:'0 auto', padding:'0 20px', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+          <img src={logo} alt="logo" style={{height:34}} onError={(e)=>{e.currentTarget.style.display='none'}}/>
+          <nav style={{display:'flex', gap:16}}>
+            <a href="#projects" style={{textDecoration:'none', color:'#0f172a'}}>Projects</a>
+            <a href="#services" style={{textDecoration:'none', color:'#0f172a'}}>Services</a>
+            <a href="#contact" style={{textDecoration:'none', color:'#0f172a'}}>Contact</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <Hero logo={logo} />
+        <Partners />
+        <Projects />
+        <Services />
+        <Industries />
+
+        <section id="contact" style={{padding:32, background:'#f8fafc'}}>
+          <div style={{maxWidth:1100, margin:'0 auto', padding:'0 20px', display:'grid', gridTemplateColumns:'1fr 420px', gap:24, alignItems:'center'}}>
+            <div>
+              <h2 style={{margin:0}}>Let's make something great</h2>
+              <p style={{color:'#6b7280', marginTop:8}}>Tell us about your idea — we’ll bring it to life from pre to post production.</p>
+            </div>
+            <ContactForm />
+          </div>
+        </section>
+      </main>
+
+      <footer style={{padding:20, textAlign:'center', color:'#6b7280'}}>
+        © {new Date().getFullYear()} VideoHut Replica — preview. All rights reserved.
+      </footer>
+    </div>
+  )
+}
